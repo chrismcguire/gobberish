@@ -2,6 +2,7 @@
 // for testing.
 package gobberish
 
+import "errors"
 import "math/rand"
 import "time"
 import "unicode"
@@ -38,13 +39,13 @@ func CreateRandomRune() rune {
 func CreateRandomRuneInRange(tables []*unicode.RangeTable) rune {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	i := r.Intn(totalInRange(tables))
-	x := getItemInRangeTable(i, tables)
+	x, _ := getItemInRangeTable(i, tables)
 
 	return rune(x)
 }
 
 // Returns the nth item contained in the array of ranges.
-func getItemInRangeTable(n int, tables []*unicode.RangeTable) int {
+func getItemInRangeTable(n int, tables []*unicode.RangeTable) (int, error) {
 	nPointer := n
 	var picked int
 	found := false
@@ -52,31 +53,36 @@ func getItemInRangeTable(n int, tables []*unicode.RangeTable) int {
 	for _, table := range tables {
 		if found == false {
 			for _, r16 := range table.R16 {
-				countInRange := int((r16.Hi - r16.Lo) / r16.Stride)
-				if nPointer <= countInRange {
+				countInRange := int((r16.Hi-r16.Lo)/r16.Stride) + 1
+				if nPointer <= countInRange-1 {
 					picked = int(r16.Lo) + (int(r16.Stride) * nPointer)
 					found = true
 					break
 				} else {
-					nPointer -= int((r16.Hi - r16.Lo) / r16.Stride)
+					nPointer -= countInRange
 				}
 			}
 
 			if found == false {
 				for _, r32 := range table.R32 {
-					countInRange := int((r32.Hi - r32.Lo) / r32.Stride)
-					if nPointer <= countInRange {
+					countInRange := int((r32.Hi-r32.Lo)/r32.Stride) + 1
+					if nPointer <= countInRange-1 {
 						picked = int(r32.Lo) + (int(r32.Stride) * nPointer)
+						found = true
 						break
 					} else {
-						nPointer -= int((r32.Hi - r32.Lo) / r32.Stride)
+						nPointer -= countInRange
 					}
 				}
 			}
 		}
 	}
 
-	return picked
+	if found == true {
+		return picked, nil
+	} else {
+		return -1, errors.New("Value not found in range")
+	}
 }
 
 // Counts the total number of items contained in the array of ranges.
@@ -84,10 +90,10 @@ func totalInRange(tables []*unicode.RangeTable) int {
 	total := 0
 	for _, table := range tables {
 		for _, r16 := range table.R16 {
-			total += int((r16.Hi - r16.Lo) / r16.Stride)
+			total += int((r16.Hi-r16.Lo)/r16.Stride) + 1
 		}
 		for _, r32 := range table.R32 {
-			total += int((r32.Hi - r32.Lo) / r32.Stride)
+			total += int((r32.Hi-r32.Lo)/r32.Stride) + 1
 		}
 	}
 	return total
