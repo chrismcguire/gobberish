@@ -3,6 +3,7 @@ Gobberish
 Building random strings to fuzz test unicode handling.
 
 [![Build Status](https://travis-ci.org/chrismcguire/gobberish.svg?branch=master)](https://travis-ci.org/chrismcguire/gobberish)
+[![GoDoc](https://godoc.org/github.com/chrismcguire/gobberish?status.svg)](https://godoc.org/github.com/chrismcguire/gobberish)
 
 Usage
 -----
