@@ -16,8 +16,8 @@ import "fmt"
 Generating a random utf-8 string of a specified length
 ```Go
 testString := gobberish.GenerateString(15)
-
 fmt.Println(testString)
+
 >> "티냮絥䯩얻橸禸䨃ȲСᣫ흳乃!*
 ```
 
