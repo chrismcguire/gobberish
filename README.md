@@ -1,6 +1,6 @@
 Gobberish
 =========
-Building random strings to fuzz test unicode handling.
+Building random unicode strings for fuzz testing.
 
 [![Build Status](https://travis-ci.org/chrismcguire/gobberish.svg?branch=master)](https://travis-ci.org/chrismcguire/gobberish)
 [![GoDoc](https://godoc.org/github.com/chrismcguire/gobberish?status.svg)](https://godoc.org/github.com/chrismcguire/gobberish)
@@ -18,7 +18,7 @@ Generating a random utf-8 string of a specified length
 testString := gobberish.GenerateString(15)
 fmt.Println(testString)
 
->> "티냮絥䯩얻橸禸䨃ȲСᣫ흳乃!*
+>> "티냮絥䯩얻橸禸䨃ȲСᣫ흳乃!*"
 ```
 
 You can also specify unicode ranges. For instance, to generate a 5 character string composed of Greek and Latin code points
